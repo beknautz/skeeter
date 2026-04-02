@@ -82,15 +82,15 @@
             would be interpreted as CF expressions and cause a secondary parse error.
             Only wrap dynamic values in cfoutput.
         --->
-        <h1 style="font-family:monospace;color:#4caf50;">SkeeterLog &mdash; Application Error</h1>
-        <p style="font-family:monospace;color:#ef9a9a;">
+        <h1 style="font-family:monospace;color:##4caf50;">SkeeterLog &mdash; Application Error</h1>
+        <p style="font-family:monospace;color:##ef9a9a;">
             <strong>Event:</strong> <cfoutput>#encodeForHTML(arguments.eventName)#</cfoutput><br>
             <strong>Message:</strong> <cfoutput>#encodeForHTML(arguments.exception.message)#</cfoutput><br>
             <cfif structKeyExists(arguments.exception, "detail") AND len(arguments.exception.detail)>
                 <strong>Detail:</strong> <cfoutput>#encodeForHTML(arguments.exception.detail)#</cfoutput><br>
             </cfif>
             <cfif structKeyExists(arguments.exception, "stackTrace")>
-                <pre style="font-size:0.75rem;color:#aaa;white-space:pre-wrap;"><cfoutput>#encodeForHTML(left(arguments.exception.stackTrace, 2000))#</cfoutput></pre>
+                <pre style="font-size:0.75rem;color:##aaa;white-space:pre-wrap;"><cfoutput>#encodeForHTML(left(arguments.exception.stackTrace, 2000))#</cfoutput></pre>
             </cfif>
         </p>
     </cffunction>
