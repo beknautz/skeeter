@@ -57,7 +57,7 @@
     <cffunction name="onRequestStart" access="public" returntype="boolean">
         <cfargument name="targetPage" type="string" required="true">
 
-        <!--- Ensure uploads directory exists --->
+        <!--- Ensure uploads directory exists (guard against scope not yet populated) --->
         <cfif isDefined("application.uploadPath") AND NOT directoryExists(application.uploadPath)>
             <cftry>
                 <cfset directoryCreate(application.uploadPath)>
@@ -69,6 +69,7 @@
         <cfset local.page = lCase(listLast(arguments.targetPage, "/\"))>
         <cfif local.page NEQ "login.cfm" AND local.page NEQ "logout.cfm">
             <cfif NOT isDefined("session.loggedIn") OR NOT session.loggedIn>
+                <!--- encodeForURL is safe outside cfoutput --->
                 <cflocation url="/admin/login.cfm?redirect=#encodeForURL(arguments.targetPage)#" addtoken="false">
             </cfif>
         </cfif>
@@ -79,19 +80,19 @@
     <cffunction name="onError" access="public" returntype="void">
         <cfargument name="exception" type="any"    required="true">
         <cfargument name="eventName" type="string" required="true">
-        <cfoutput>
-        <h1 style="font-family:monospace;color:#4caf50;">SkeeterLog Admin — Error</h1>
+        <!--- Static HTML outside cfoutput — CSS hex colours (#4caf50 etc.) must not
+              appear inside cfoutput or CF will try to evaluate them as expressions. --->
+        <h1 style="font-family:monospace;color:#4caf50;">SkeeterLog Admin &mdash; Error</h1>
         <p style="font-family:monospace;color:#ef9a9a;">
-            <strong>Event:</strong> #encodeForHTML(arguments.eventName)#<br>
-            <strong>Message:</strong> #encodeForHTML(arguments.exception.message)#<br>
+            <strong>Event:</strong> <cfoutput>#encodeForHTML(arguments.eventName)#</cfoutput><br>
+            <strong>Message:</strong> <cfoutput>#encodeForHTML(arguments.exception.message)#</cfoutput><br>
             <cfif structKeyExists(arguments.exception, "detail") AND len(arguments.exception.detail)>
-                <strong>Detail:</strong> #encodeForHTML(arguments.exception.detail)#<br>
+                <strong>Detail:</strong> <cfoutput>#encodeForHTML(arguments.exception.detail)#</cfoutput><br>
             </cfif>
             <cfif structKeyExists(arguments.exception, "stackTrace")>
-                <pre style="font-size:0.75rem;color:#aaa;white-space:pre-wrap;">#encodeForHTML(left(arguments.exception.stackTrace, 2000))#</pre>
+                <pre style="font-size:0.75rem;color:#aaa;white-space:pre-wrap;"><cfoutput>#encodeForHTML(left(arguments.exception.stackTrace, 2000))#</cfoutput></pre>
             </cfif>
         </p>
-        </cfoutput>
     </cffunction>
 
 </cfcomponent>
