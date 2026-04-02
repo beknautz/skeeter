@@ -24,8 +24,18 @@
             Anthropic API key loaded from environment variable ANTHROPIC_API_KEY.
             Set this in your OS/ColdFusion administrator environment before startup.
             Never hard-code the key in source files.
+
+            Using Java's System.getenv() because it returns Java null for missing
+            keys, which allows the CF ?: (null-coalescing) operator to work safely.
+            server.system.environment["KEY"] throws on a missing key before ?: fires.
         --->
-        <cfset application.anthropicApiKey = server.system.environment["ANTHROPIC_API_KEY"] ?: "">
+        <cftry>
+            <cfset local.sysEnv = createObject("java", "java.lang.System").getenv()>
+            <cfset application.anthropicApiKey = local.sysEnv.get("ANTHROPIC_API_KEY") ?: "">
+            <cfcatch type="any">
+                <cfset application.anthropicApiKey = "">
+            </cfcatch>
+        </cftry>
         <cfset application.anthropicModel  = "claude-sonnet-4-6">
         <cfset application.anthropicApiUrl = "https://api.anthropic.com/v1/messages">
 
@@ -69,11 +79,17 @@
         <cfargument name="eventName" type="string" required="true">
         <cfoutput>
         <h1 style="font-family:monospace;color:#4caf50;">SkeeterLog — Application Error</h1>
-        <p style="font-family:monospace;">#encodeForHTML(arguments.exception.message)#</p>
+        <p style="font-family:monospace;color:#ef9a9a;">
+            <strong>Event:</strong> #encodeForHTML(arguments.eventName)#<br>
+            <strong>Message:</strong> #encodeForHTML(arguments.exception.message)#<br>
+            <cfif structKeyExists(arguments.exception, "detail") AND len(arguments.exception.detail)>
+                <strong>Detail:</strong> #encodeForHTML(arguments.exception.detail)#<br>
+            </cfif>
+            <cfif structKeyExists(arguments.exception, "stackTrace")>
+                <pre style="font-size:0.75rem;color:#aaa;white-space:pre-wrap;">#encodeForHTML(left(arguments.exception.stackTrace, 2000))#</pre>
+            </cfif>
+        </p>
         </cfoutput>
-        <cfif isDefined("application.debug") AND application.debug>
-            <cfdump var="#arguments.exception#">
-        </cfif>
     </cffunction>
 
 </cfcomponent>
