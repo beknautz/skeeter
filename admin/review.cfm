@@ -1,3 +1,4 @@
+<cfinclude template="/layouts/admin_auth.cfm">
 <cfset pageTitle    = "Review Queue">
 <cfset specimenSvc = createObject("component", "components.SpecimenService")>
 
