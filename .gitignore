@@ -1,0 +1,18 @@
+# ColdFusion
+*.cfswc
+*.cfswp
+.classpath
+.project
+.settings/
+
+# Uploads directory (user-uploaded files, not source code)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
