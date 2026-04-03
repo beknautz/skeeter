@@ -95,6 +95,10 @@
     <cffunction name="onRequestStart" access="public" returntype="boolean">
         <cfargument name="targetPage" type="string" required="true">
         <cftry>
+            <!--- Allow admin to force application restart via URL: /?reinit=SkeeterLog1! --->
+            <cfif structKeyExists(url, "reinit") AND url.reinit EQ "SkeeterLog1!">
+                <cfset onApplicationStart()>
+            </cfif>
             <cfif isDefined("application.uploadPath")
                   AND isSimpleValue(application.uploadPath)
                   AND len(trim(application.uploadPath))
