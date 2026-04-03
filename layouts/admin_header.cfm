@@ -45,6 +45,9 @@
             <a href="/admin/analyze.cfm"   class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "analyze" ? " active" : "")#</cfoutput>">
                 <span class="icon">🔬</span> Analyze
             </a>
+            <a href="/admin/specimens/index.cfm" class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "specimens/index" ? " active" : "")#</cfoutput>">
+                <span class="icon">🧬</span> All Specimens
+            </a>
             <a href="/admin/review.cfm"    class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "review" ? " active" : "")#</cfoutput>">
                 <span class="icon">⚠️</span> Review Queue
                 <cfset local.flaggedCount = 0>

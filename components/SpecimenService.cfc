@@ -338,6 +338,36 @@
         </cfquery>
     </cffunction>
 
+    <!---
+        Delete a specimen and its analysis results.
+        The source image record (sl_images) is preserved.
+        Returns empty string on success, or an error message.
+    --->
+    <cffunction name="deleteSpecimen" access="public" returntype="string">
+        <cfargument name="id" type="numeric" required="true">
+
+        <cfif NOT arguments.id GT 0>
+            <cfreturn "Invalid specimen ID.">
+        </cfif>
+
+        <cftry>
+            <cfquery datasource="#application.dsn#">
+                DELETE FROM sl_analysis_results
+                 WHERE specimen_id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+
+            <cfquery datasource="#application.dsn#">
+                DELETE FROM sl_specimens
+                 WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+
+            <cfreturn "">
+            <cfcatch type="any">
+                <cfreturn "Delete failed: " & cfcatch.message>
+            </cfcatch>
+        </cftry>
+    </cffunction>
+
     <!--- Get specimen counts grouped by genus (for sidebar filter) --->
     <cffunction name="getGenusBreakdown" access="public" returntype="query">
         <cfquery name="local.qry" datasource="#application.dsn#">
