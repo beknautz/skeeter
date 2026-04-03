@@ -26,10 +26,10 @@
     --text-2: #94a3b8;
     --text-3: #64748b;
 
-    /* Accent — sky science blue */
-    --accent:       #38bdf8;
-    --accent-dim:   rgba(56,189,248,0.12);
-    --accent-glow:  rgba(56,189,248,0.25);
+    /* Accent — burnt orange */
+    --accent:       #db5719;
+    --accent-dim:   rgba(219,87,25,0.12);
+    --accent-glow:  rgba(219,87,25,0.25);
 
     /* Semantic */
     --green:   #34d399;
@@ -153,7 +153,7 @@ a:hover { text-decoration: underline; }
     align-items: center;
     gap: 0.5rem;
     background: var(--accent-dim);
-    border: 1px solid rgba(56,189,248,0.2);
+    border: 1px solid rgba(219,87,25,0.2);
     color: var(--accent);
     font-size: 0.72rem;
     font-weight: 600;
@@ -362,8 +362,8 @@ a:hover { text-decoration: underline; }
     border-color: var(--accent);
 }
 .btn-primary:hover:not(:disabled) {
-    background: #7dd3fc;
-    border-color: #7dd3fc;
+    background: #e8784a;
+    border-color: #e8784a;
     box-shadow: 0 0 16px var(--accent-glow);
 }
 
@@ -473,7 +473,7 @@ a:hover { text-decoration: underline; }
     font-weight: 500;
     background: var(--accent-dim);
     color: var(--accent);
-    border: 1px solid rgba(56,189,248,0.18);
+    border: 1px solid rgba(219,87,25,0.18);
     padding: 0.15rem 0.45rem;
     border-radius: 4px;
     letter-spacing: 0.04em;
@@ -541,8 +541,8 @@ a:hover { text-decoration: underline; }
 
 /* ── PREVIEW BANNER ─────────────────────────────────────── */
 .preview-banner {
-    background: linear-gradient(90deg, rgba(56,189,248,0.12) 0%, rgba(52,211,153,0.08) 100%);
-    border-bottom: 1px solid rgba(56,189,248,0.2);
+    background: linear-gradient(90deg, rgba(219,87,25,0.12) 0%, rgba(52,211,153,0.08) 100%);
+    border-bottom: 1px solid rgba(219,87,25,0.2);
     padding: 0.6rem 1.5rem;
     text-align: center;
     font-size: 0.78rem;
