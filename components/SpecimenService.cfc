@@ -357,24 +357,24 @@
 
         <cfquery name="local.q" datasource="#application.dsn#">
             SELECT
-                COUNT(*)                                       AS total,
-                SUM(CASE WHEN review_status = 'needs_review'   THEN 1 ELSE 0 END) AS needs_review,
-                SUM(CASE WHEN review_status = 'auto_approved'  THEN 1 ELSE 0 END) AS auto_approved,
-                SUM(CASE WHEN review_status = 'approved'       THEN 1 ELSE 0 END) AS approved,
-                SUM(CASE WHEN confidence < #application.lowConfidenceThreshold#   THEN 1 ELSE 0 END) AS low_confidence
+                COUNT(*)                                                                    AS total,
+                COALESCE(SUM(CASE WHEN review_status = 'needs_review'  THEN 1 ELSE 0 END), 0) AS needs_review,
+                COALESCE(SUM(CASE WHEN review_status = 'auto_approved' THEN 1 ELSE 0 END), 0) AS auto_approved,
+                COALESCE(SUM(CASE WHEN review_status = 'approved'      THEN 1 ELSE 0 END), 0) AS approved,
+                COALESCE(SUM(CASE WHEN confidence < <cfqueryparam value="#application.lowConfidenceThreshold#" cfsqltype="cf_sql_decimal"> THEN 1 ELSE 0 END), 0) AS low_confidence
               FROM sl_specimens
         </cfquery>
 
-        <cfset local.stats.total          = local.q.total>
-        <cfset local.stats.needsReview    = local.q.needs_review>
-        <cfset local.stats.autoApproved   = local.q.auto_approved>
-        <cfset local.stats.approved       = local.q.approved>
-        <cfset local.stats.lowConfidence  = local.q.low_confidence>
+        <cfset local.stats.total          = val(local.q.total)>
+        <cfset local.stats.needsReview    = val(local.q.needs_review)>
+        <cfset local.stats.autoApproved   = val(local.q.auto_approved)>
+        <cfset local.stats.approved       = val(local.q.approved)>
+        <cfset local.stats.lowConfidence  = val(local.q.low_confidence)>
 
         <cfquery name="local.bq" datasource="#application.dsn#">
             SELECT COUNT(*) AS batch_count FROM sl_upload_batches
         </cfquery>
-        <cfset local.stats.batchCount = local.bq.batch_count>
+        <cfset local.stats.batchCount = val(local.bq.batch_count)>
 
         <cfreturn local.stats>
     </cffunction>
