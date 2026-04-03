@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><cfoutput>#encodeForHTML(isDefined("pageTitle") ? pageTitle & " — SkeeterLog Admin" : "SkeeterLog Admin")#</cfoutput></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/skeeterlog.css">
     <script src="https://unpkg.com/htmx.org@1.9.12" crossorigin="anonymous"></script>
 </head>
@@ -11,7 +13,7 @@
 
 <nav class="sl-navbar">
     <a href="/admin/index.cfm" class="sl-navbar-brand">
-        <span class="brand-icon">🦟</span>
+        <span class="brand-icon"></span>
         SkeeterLog
         <span class="brand-version">Admin</span>
     </a>
@@ -65,6 +67,12 @@
             </a>
             <a href="/admin/events/index.cfm"  class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "admin/events" ? " active" : "")#</cfoutput>">
                 <span class="icon">🗓️</span> Collection Events
+            </a>
+        </div>
+        <span class="sl-sidebar-label">Reference Library</span>
+        <div class="sl-sidebar-section">
+            <a href="/admin/references/index.cfm" class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "references" ? " active" : "")#</cfoutput>">
+                <span class="icon">🖼</span> Reference Images
             </a>
         </div>
         <span class="sl-sidebar-label">Admin</span>

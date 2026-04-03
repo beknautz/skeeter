@@ -26,6 +26,27 @@
 
 <cfinclude template="/layouts/header.cfm">
 
+<!--- Hero --->
+<div class="hero-wrap">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <section class="sl-hero">
+        <div class="hero-eyebrow">AI-Powered Mosquito Research Platform</div>
+        <h1>Identify &amp; catalog<br><em>Culicidae</em> specimens</h1>
+        <p>
+            Upload microscope images and receive instant AI-powered genus and species
+            identification with morphological analysis, confidence scoring, and
+            automatic specimen cataloging.
+        </p>
+        <div class="hero-actions">
+            <cfif isDefined("session.loggedIn") AND session.loggedIn>
+                <a href="/admin/upload.cfm" class="sl-btn sl-btn-primary">Upload Images</a>
+            </cfif>
+            <a href="#specimen-grid" class="sl-btn sl-btn-ghost">Browse Database</a>
+        </div>
+    </section>
+</div>
+
 <div class="sl-container">
 
     <div class="sl-page-header">
