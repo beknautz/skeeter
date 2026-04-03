@@ -142,8 +142,46 @@ a:hover { text-decoration: underline; }
 }
 
 /* ── HERO ───────────────────────────────────────────────── */
+.hero-wrap {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-2);
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/skeeter_hero.jpg');
+    background-size: cover;
+    background-position: center 40%;
+    background-repeat: no-repeat;
+    transform: scale(1.03);
+    transition: transform 8s ease;
+    filter: saturate(0.7) brightness(0.55);
+}
+.hero-wrap:hover .hero-bg {
+    transform: scale(1.0);
+}
+
+/* Layered overlay: deep soil at bottom, transparent at top-center */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to bottom,
+            rgba(14,11,7,0.35) 0%,
+            rgba(14,11,7,0.55) 50%,
+            rgba(14,11,7,0.92) 100%),
+        linear-gradient(to right,
+            rgba(14,11,7,0.7) 0%,
+            rgba(14,11,7,0.1) 60%,
+            rgba(14,11,7,0.5) 100%);
+}
+
 .hero {
-    padding: 4rem 1.5rem 2.5rem;
+    position: relative;
+    z-index: 2;
+    padding: 6rem 1.5rem 4rem;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -591,19 +629,23 @@ a:hover { text-decoration: underline; }
 </header>
 
 <!--- HERO --->
-<section class="hero">
-    <div class="hero-eyebrow">AI-Powered Mosquito Research Platform</div>
-    <h1>Identify &amp; catalog<br><em>Culicidae</em> specimens</h1>
-    <p>
-        Upload microscope images and receive instant AI-powered genus and species
-        identification with morphological analysis, confidence scoring, and
-        automatic specimen cataloging.
-    </p>
-    <div class="hero-actions">
-        <a href="/admin/upload.cfm" class="btn btn-primary">Upload Images</a>
-        <a href="#specimens" class="btn btn-ghost">Browse Database</a>
-    </div>
-</section>
+<div class="hero-wrap">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <section class="hero">
+        <div class="hero-eyebrow">AI-Powered Mosquito Research Platform</div>
+        <h1>Identify &amp; catalog<br><em>Culicidae</em> specimens</h1>
+        <p>
+            Upload microscope images and receive instant AI-powered genus and species
+            identification with morphological analysis, confidence scoring, and
+            automatic specimen cataloging.
+        </p>
+        <div class="hero-actions">
+            <a href="/admin/upload.cfm" class="btn btn-primary">Upload Images</a>
+            <a href="#specimens" class="btn btn-ghost">Browse Database</a>
+        </div>
+    </section>
+</div>
 
 <!--- STAT STRIP --->
 <div class="stat-strip">
