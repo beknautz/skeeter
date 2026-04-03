@@ -13,18 +13,18 @@
 <style>
 /* ── DESIGN SYSTEM ─────────────────────────────────────── */
 :root {
-    /* Surfaces — tan base, medium bark cards */
-    --bg:           #b8976a;
-    --bg-1:         #7a5233;
-    --bg-2:         #6a4628;
-    --bg-3:         #5a3b1f;
-    --border:       rgba(30,14,4,0.18);
-    --border-hover: rgba(30,14,4,0.32);
+    /* Surfaces — warm earth/soil tones */
+    --bg:           #0e0b07;
+    --bg-1:         #181208;
+    --bg-2:         #221a0e;
+    --bg-3:         #2c2114;
+    --border:       rgba(255,210,160,0.08);
+    --border-hover: rgba(255,210,160,0.15);
 
-    /* Text — dark ink on tan, cream on bark cards */
+    /* Text — warm cream instead of cool slate */
     --text-1: #f5ede0;
-    --text-2: #e0ccb0;
-    --text-3: #c4a87a;
+    --text-2: #b5a088;
+    --text-3: #7a6554;
 
     /* Accent — burnt orange */
     --accent:       #db5719;
@@ -36,8 +36,8 @@
     --green-d: rgba(109,189,138,0.12);
     --amber:   #d4952a;
     --amber-d: rgba(212,149,42,0.12);
-    --red:     #c9614a;
-    --red-d:   rgba(201,97,74,0.12);
+    --red:     #f87171;
+    --red-d:   rgba(248,113,113,0.12);
 
     /* Type */
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -73,7 +73,7 @@ a:hover { text-decoration: underline; }
     position: sticky;
     top: 0;
     z-index: 200;
-    background: rgba(90,59,31,0.92);
+    background: rgba(14,11,7,0.88);
     backdrop-filter: blur(12px) saturate(1.6);
     -webkit-backdrop-filter: blur(12px) saturate(1.6);
     border-bottom: 1px solid var(--border);
@@ -204,7 +204,7 @@ a:hover { text-decoration: underline; }
 
 /* ── STAT STRIP ─────────────────────────────────────────── */
 .stat-strip {
-    background: var(--bg-2);
+    background: var(--bg-1);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     padding: 1.5rem;
