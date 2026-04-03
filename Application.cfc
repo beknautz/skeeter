@@ -20,13 +20,55 @@
         <cfset application.dsn         = "skeeterlog">
         <cfset application.debug       = false>
 
+        <!---
+            API key resolution — three sources tried in order:
+            1. OS environment variable  (ideal on dedicated/VPS servers)
+            2. JSON secrets file above the web root (ideal on shared hosting)
+            3. Inline fallback — set local.inlineApiKey below if neither above works.
+               Keep this blank in source control; set it only on the live server file.
+        --->
+        <cfset application.anthropicApiKey = "">
+
+        <!--- Source 1: OS environment variable --->
         <cftry>
             <cfset local.sysEnv = createObject("java", "java.lang.System").getenv()>
-            <cfset application.anthropicApiKey = local.sysEnv.get("ANTHROPIC_API_KEY") ?: "">
-            <cfcatch type="any">
-                <cfset application.anthropicApiKey = "">
-            </cfcatch>
+            <cfset local.envKey = local.sysEnv.get("ANTHROPIC_API_KEY") ?: "">
+            <cfif len(trim(local.envKey))>
+                <cfset application.anthropicApiKey = trim(local.envKey)>
+            </cfif>
+            <cfcatch type="any"></cfcatch>
         </cftry>
+
+        <!--- Source 2: JSON file above web root (shared hosting) --->
+        <cfif NOT len(application.anthropicApiKey)>
+            <cftry>
+                <!---
+                    Adjust this path to point one level above your wwwroot.
+                    Common shared-host layouts:
+                      /home/skeeterlog.org/config/secrets.json
+                      /home/username/private/secrets.json
+                      D:\home\skeeterlog.org\config\secrets.json
+                --->
+                <cfset local.secretsFile = expandPath("../../config/secrets.json")>
+                <cfif fileExists(local.secretsFile)>
+                    <cfset local.raw     = fileRead(local.secretsFile, "utf-8")>
+                    <cfset local.secrets = deserializeJSON(local.raw)>
+                    <cfif structKeyExists(local.secrets, "ANTHROPIC_API_KEY")
+                          AND len(trim(local.secrets.ANTHROPIC_API_KEY))>
+                        <cfset application.anthropicApiKey = trim(local.secrets.ANTHROPIC_API_KEY)>
+                    </cfif>
+                </cfif>
+                <cfcatch type="any"></cfcatch>
+            </cftry>
+        </cfif>
+
+        <!--- Source 3: Inline (set directly on the production server only — do NOT commit the real key) --->
+        <cfif NOT len(application.anthropicApiKey)>
+            <cfset local.inlineApiKey = ""><!--- paste sk-ant-... here on the live server only --->
+            <cfif len(trim(local.inlineApiKey))>
+                <cfset application.anthropicApiKey = trim(local.inlineApiKey)>
+            </cfif>
+        </cfif>
 
         <cfset application.anthropicModel         = "claude-sonnet-4-6">
         <cfset application.anthropicApiUrl        = "https://api.anthropic.com/v1/messages">
