@@ -13,18 +13,18 @@
 <style>
 /* ── DESIGN SYSTEM ─────────────────────────────────────── */
 :root {
-    /* Surfaces */
-    --bg:           #0b0f1a;
-    --bg-1:         #111827;
-    --bg-2:         #1a2235;
-    --bg-3:         #1f2a40;
-    --border:       rgba(255,255,255,0.08);
-    --border-hover: rgba(255,255,255,0.14);
+    /* Surfaces — warm earth/soil tones */
+    --bg:           #0e0b07;
+    --bg-1:         #181208;
+    --bg-2:         #221a0e;
+    --bg-3:         #2c2114;
+    --border:       rgba(255,210,160,0.08);
+    --border-hover: rgba(255,210,160,0.15);
 
-    /* Text */
-    --text-1: #f1f5f9;
-    --text-2: #94a3b8;
-    --text-3: #64748b;
+    /* Text — warm cream instead of cool slate */
+    --text-1: #f5ede0;
+    --text-2: #b5a088;
+    --text-3: #7a6554;
 
     /* Accent — burnt orange */
     --accent:       #db5719;
@@ -32,12 +32,12 @@
     --accent-glow:  rgba(219,87,25,0.25);
 
     /* Semantic */
-    --green:   #34d399;
-    --green-d: rgba(52,211,153,0.12);
-    --amber:   #fbbf24;
-    --amber-d: rgba(251,191,36,0.12);
-    --red:     #f87171;
-    --red-d:   rgba(248,113,113,0.12);
+    --green:   #6dbd8a;
+    --green-d: rgba(109,189,138,0.12);
+    --amber:   #d4952a;
+    --amber-d: rgba(212,149,42,0.12);
+    --red:     #c9614a;
+    --red-d:   rgba(201,97,74,0.12);
 
     /* Type */
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -73,7 +73,7 @@ a:hover { text-decoration: underline; }
     position: sticky;
     top: 0;
     z-index: 200;
-    background: rgba(11,15,26,0.85);
+    background: rgba(14,11,7,0.88);
     backdrop-filter: blur(12px) saturate(1.6);
     -webkit-backdrop-filter: blur(12px) saturate(1.6);
     border-bottom: 1px solid var(--border);
@@ -541,8 +541,8 @@ a:hover { text-decoration: underline; }
 
 /* ── PREVIEW BANNER ─────────────────────────────────────── */
 .preview-banner {
-    background: linear-gradient(90deg, rgba(219,87,25,0.12) 0%, rgba(52,211,153,0.08) 100%);
-    border-bottom: 1px solid rgba(219,87,25,0.2);
+    background: linear-gradient(90deg, rgba(219,87,25,0.14) 0%, rgba(109,189,138,0.07) 100%);
+    border-bottom: 1px solid rgba(219,87,25,0.22);
     padding: 0.6rem 1.5rem;
     text-align: center;
     font-size: 0.78rem;
