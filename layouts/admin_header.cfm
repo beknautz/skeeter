@@ -58,6 +58,15 @@
                 </cfif>
             </a>
         </div>
+        <span class="sl-sidebar-label">Field Data</span>
+        <div class="sl-sidebar-section">
+            <a href="/admin/sites/index.cfm"   class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "admin/sites" ? " active" : "")#</cfoutput>">
+                <span class="icon">📍</span> Collection Sites
+            </a>
+            <a href="/admin/events/index.cfm"  class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "admin/events" ? " active" : "")#</cfoutput>">
+                <span class="icon">🗓️</span> Collection Events
+            </a>
+        </div>
         <span class="sl-sidebar-label">Admin</span>
         <div class="sl-sidebar-section">
             <cfif isDefined("session.role") AND session.role EQ "admin">
