@@ -52,7 +52,33 @@
     <cfset local.date        = isDefined("form.collectionDate")     ? trim(form.collectionDate)      : "">
     <cfset local.notes       = isDefined("form.notes")              ? trim(form.notes)               : "">
     <cfset local.rstatus     = isDefined("form.reviewStatus")       ? trim(form.reviewStatus)        : "">
+    <cfset local.newSpecID   = isDefined("form.specimenID")         ? trim(form.specimenID)          : "">
 
+    <!--- Validate and update specimen_id if changed --->
+    <cfif len(local.newSpecID) AND local.newSpecID NEQ specimen.specimen_id>
+        <!--- Enforce simple format and uniqueness --->
+        <cfif NOT reFind("^[A-Z0-9][A-Z0-9\-]{2,49}$", local.newSpecID)>
+            <cfset errorMsg = "Specimen ID may only contain uppercase letters, numbers, and hyphens (3–50 characters).">
+        <cfelse>
+            <cfquery name="local.idCheck" datasource="#application.dsn#">
+                SELECT id FROM sl_specimens
+                 WHERE specimen_id = <cfqueryparam value="#local.newSpecID#" cfsqltype="cf_sql_varchar">
+                   AND id <> <cfqueryparam value="#p_id#" cfsqltype="cf_sql_integer">
+                 LIMIT 1
+            </cfquery>
+            <cfif local.idCheck.recordCount>
+                <cfset errorMsg = "Specimen ID '#encodeForHTML(local.newSpecID)#' is already in use by another record.">
+            <cfelse>
+                <cfquery datasource="#application.dsn#">
+                    UPDATE sl_specimens
+                       SET specimen_id = <cfqueryparam value="#local.newSpecID#" cfsqltype="cf_sql_varchar">
+                     WHERE id = <cfqueryparam value="#p_id#" cfsqltype="cf_sql_integer">
+                </cfquery>
+            </cfif>
+        </cfif>
+    </cfif>
+
+    <cfif NOT len(errorMsg)>
     <cftry>
         <cfset specimenSvc.updateSpecimen(
             id                   = p_id,
@@ -87,6 +113,7 @@
             <cfset errorMsg = "Save failed: " & cfcatch.message>
         </cfcatch>
     </cftry>
+    </cfif><!--- /no errorMsg --->
 </cfif>
 
 <cfinclude template="/layouts/admin_header.cfm">
@@ -186,6 +213,16 @@
         <div class="sl-card mb-2">
             <div class="sl-card-header">Taxonomic Identification</div>
             <div class="sl-card-body">
+
+                <div class="sl-form-group">
+                    <label class="sl-label" for="specimenID">Specimen ID</label>
+                    <input type="text" id="specimenID" name="specimenID" class="sl-input mono"
+                           style="text-transform:uppercase;"
+                           placeholder="e.g. AED-AEGY-20260404-0001"
+                           value="<cfoutput>#encodeForHTMLAttribute(specimen.specimen_id)#</cfoutput>"
+                           oninput="this.value=this.value.toUpperCase()">
+                    <div class="small text-muted">Uppercase letters, numbers, hyphens only. Changing this updates the catalog ID.</div>
+                </div>
 
                 <div class="sl-form-group">
                     <label class="sl-label" for="genusID">Genus (from catalog)</label>
