@@ -13,10 +13,10 @@
 
 <!--- Pull AI analysis notes --->
 <cfquery name="aiResult" datasource="#application.dsn#">
-    SELECT ai_notes, morpho_tags_json, analyzed_at, model_version
+    SELECT ai_notes, morpho_tags_json, created_at, model_used
       FROM sl_analysis_results
      WHERE specimen_id = <cfqueryparam value="#p_id#" cfsqltype="cf_sql_integer">
-     ORDER BY analyzed_at DESC
+     ORDER BY created_at DESC
      LIMIT 1
 </cfquery>
 
@@ -98,11 +98,11 @@
                                     font-size:0.83rem;color:var(--sl-text-muted);line-height:1.6;border-left:3px solid var(--sl-accent);">
                             #encodeForHTML(aiResult.ai_notes)#
                         </div>
-                        <cfif len(trim(aiResult.model_version))>
+                        <cfif len(trim(aiResult.model_used))>
                             <div class="mono" style="font-size:0.68rem;color:var(--sl-text-dim);margin-top:0.4rem;">
-                                Model: #encodeForHTML(aiResult.model_version)#
-                                <cfif NOT isNull(aiResult.analyzed_at)>
-                                    &bull; #dateFormat(aiResult.analyzed_at,"DD MMM YYYY")#
+                                Model: #encodeForHTML(aiResult.model_used)#
+                                <cfif NOT isNull(aiResult.created_at)>
+                                    &bull; #dateFormat(aiResult.created_at,"DD MMM YYYY")#
                                 </cfif>
                             </div>
                         </cfif>
