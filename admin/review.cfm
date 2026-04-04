@@ -1,3 +1,4 @@
+<cfinclude template="/layouts/admin_auth.cfm">
 <cfset pageTitle    = "Review Queue">
 <cfset specimenSvc = createObject("component", "components.SpecimenService")>
 
@@ -157,6 +158,10 @@
                                     class="sl-btn sl-btn-danger">
                                 ✗ Reject
                             </button>
+                            <a href="/admin/specimens/edit.cfm?id=#reviewQueue.id#"
+                               class="sl-btn sl-btn-ghost">
+                                ✏️ Edit Details
+                            </a>
                         </div>
                     </form>
 

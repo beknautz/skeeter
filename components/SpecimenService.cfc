@@ -103,20 +103,119 @@
 
         <cfquery name="local.qry" datasource="#application.dsn#">
             SELECT s.*,
-                   i.file_name      AS image_file,
-                   i.original_name  AS image_original_name,
-                   g.code           AS genus_code,
-                   g.description    AS genus_description,
-                   u.full_name      AS reviewer_name
-              FROM sl_specimens s
-         LEFT JOIN sl_images    i ON s.image_id    = i.id
-         LEFT JOIN sl_genera    g ON s.genus_id    = g.id
-         LEFT JOIN sl_users     u ON s.reviewed_by = u.id
+                   i.file_name          AS image_file,
+                   i.original_name      AS image_original_name,
+                   g.code               AS genus_code,
+                   g.description        AS genus_description,
+                   rv.full_name         AS reviewer_name,
+                   idr.full_name        AS identifier_name,
+                   ce.event_name        AS event_name,
+                   ce.event_date        AS event_date,
+                   ce.trap_type         AS event_trap_type,
+                   cs.site_code         AS site_code,
+                   cs.site_name         AS site_name,
+                   cs.latitude          AS site_latitude,
+                   cs.longitude         AS site_longitude,
+                   cs.habitat_type      AS site_habitat_type
+              FROM sl_specimens            s
+         LEFT JOIN sl_images               i  ON s.image_id             = i.id
+         LEFT JOIN sl_genera               g  ON s.genus_id             = g.id
+         LEFT JOIN sl_users               rv  ON s.reviewed_by          = rv.id
+         LEFT JOIN sl_users              idr  ON s.identified_by        = idr.id
+         LEFT JOIN sl_collection_events  ce   ON s.collection_event_id  = ce.id
+         LEFT JOIN sl_collection_sites   cs   ON ce.site_id             = cs.id
              WHERE s.specimen_id = <cfqueryparam value="#arguments.specimenID#" cfsqltype="cf_sql_varchar">
              LIMIT 1
         </cfquery>
 
         <cfreturn local.qry>
+    </cffunction>
+
+    <!--- Get a single specimen by primary key integer ID --->
+    <cffunction name="getSpecimenByPK" access="public" returntype="query">
+        <cfargument name="id" type="numeric" required="true">
+
+        <cfquery name="local.qry" datasource="#application.dsn#">
+            SELECT s.*,
+                   i.file_name          AS image_file,
+                   i.original_name      AS image_original_name,
+                   g.code               AS genus_code,
+                   rv.full_name         AS reviewer_name,
+                   idr.full_name        AS identifier_name,
+                   ce.event_name        AS event_name,
+                   ce.event_date        AS event_date,
+                   cs.site_code         AS site_code,
+                   cs.site_name         AS site_name
+              FROM sl_specimens            s
+         LEFT JOIN sl_images               i  ON s.image_id             = i.id
+         LEFT JOIN sl_genera               g  ON s.genus_id             = g.id
+         LEFT JOIN sl_users               rv  ON s.reviewed_by          = rv.id
+         LEFT JOIN sl_users              idr  ON s.identified_by        = idr.id
+         LEFT JOIN sl_collection_events  ce   ON s.collection_event_id  = ce.id
+         LEFT JOIN sl_collection_sites   cs   ON ce.site_id             = cs.id
+             WHERE s.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+             LIMIT 1
+        </cfquery>
+
+        <cfreturn local.qry>
+    </cffunction>
+
+    <!--- Update an existing specimen record with all editable fields --->
+    <cffunction name="updateSpecimen" access="public" returntype="void">
+        <cfargument name="id"                  type="numeric" required="true">
+        <cfargument name="genusName"           type="string"  required="false" default="">
+        <cfargument name="speciesName"         type="string"  required="false" default="">
+        <cfargument name="genusID"             type="numeric" required="false" default="0">
+        <cfargument name="confidence"          type="numeric" required="false" default="0">
+        <cfargument name="sex"                 type="string"  required="false" default="unknown">
+        <cfargument name="lifeStage"           type="string"  required="false" default="adult">
+        <cfargument name="bloodFedStatus"      type="string"  required="false" default="unknown">
+        <cfargument name="specimenCondition"   type="string"  required="false" default="good">
+        <cfargument name="countCollected"      type="numeric" required="false" default="1">
+        <cfargument name="preservationMethod"  type="string"  required="false" default="dry_pinned">
+        <cfargument name="storageLocation"     type="string"  required="false" default="">
+        <cfargument name="voucherNumber"       type="string"  required="false" default="">
+        <cfargument name="identificationMethod" type="string" required="false" default="ai_vision">
+        <cfargument name="identifiedBy"        type="numeric" required="false" default="0">
+        <cfargument name="identifiedAt"        type="string"  required="false" default="">
+        <cfargument name="microscopeType"      type="string"  required="false" default="">
+        <cfargument name="magnification"       type="string"  required="false" default="">
+        <cfargument name="bodyPartImaged"      type="string"  required="false" default="whole_body">
+        <cfargument name="collectionEventID"   type="numeric" required="false" default="0">
+        <cfargument name="collectionSite"      type="string"  required="false" default="">
+        <cfargument name="collectionDate"      type="string"  required="false" default="">
+        <cfargument name="notes"               type="string"  required="false" default="">
+        <cfargument name="reviewStatus"        type="string"  required="false" default="">
+
+        <cfquery datasource="#application.dsn#">
+            UPDATE sl_specimens
+               SET genus_name            = <cfqueryparam value="#trim(arguments.genusName)#"      cfsqltype="cf_sql_varchar">,
+                   species_name          = <cfqueryparam value="#trim(arguments.speciesName)#"    cfsqltype="cf_sql_varchar">,
+                   genus_id              = <cfif arguments.genusID GT 0><cfqueryparam value="#arguments.genusID#" cfsqltype="cf_sql_integer"><cfelse>NULL</cfif>,
+                   confidence            = <cfqueryparam value="#arguments.confidence#"           cfsqltype="cf_sql_decimal">,
+                   sex                   = <cfqueryparam value="#arguments.sex#"                  cfsqltype="cf_sql_varchar">,
+                   life_stage            = <cfqueryparam value="#arguments.lifeStage#"            cfsqltype="cf_sql_varchar">,
+                   blood_fed_status      = <cfqueryparam value="#arguments.bloodFedStatus#"       cfsqltype="cf_sql_varchar">,
+                   specimen_condition    = <cfqueryparam value="#arguments.specimenCondition#"    cfsqltype="cf_sql_varchar">,
+                   count_collected       = <cfqueryparam value="#arguments.countCollected#"       cfsqltype="cf_sql_integer">,
+                   preservation_method   = <cfqueryparam value="#arguments.preservationMethod#"   cfsqltype="cf_sql_varchar">,
+                   storage_location      = <cfqueryparam value="#trim(arguments.storageLocation)#"  cfsqltype="cf_sql_varchar">,
+                   voucher_number        = <cfqueryparam value="#trim(arguments.voucherNumber)#"    cfsqltype="cf_sql_varchar">,
+                   identification_method = <cfqueryparam value="#arguments.identificationMethod#" cfsqltype="cf_sql_varchar">,
+                   identified_by         = <cfif arguments.identifiedBy GT 0><cfqueryparam value="#arguments.identifiedBy#" cfsqltype="cf_sql_integer"><cfelse>NULL</cfif>,
+                   identified_at         = <cfif len(trim(arguments.identifiedAt))><cfqueryparam value="#trim(arguments.identifiedAt)#" cfsqltype="cf_sql_timestamp"><cfelse>NULL</cfif>,
+                   microscope_type       = <cfqueryparam value="#trim(arguments.microscopeType)#"  cfsqltype="cf_sql_varchar">,
+                   magnification         = <cfqueryparam value="#trim(arguments.magnification)#"   cfsqltype="cf_sql_varchar">,
+                   body_part_imaged      = <cfqueryparam value="#arguments.bodyPartImaged#"        cfsqltype="cf_sql_varchar">,
+                   collection_event_id   = <cfif arguments.collectionEventID GT 0><cfqueryparam value="#arguments.collectionEventID#" cfsqltype="cf_sql_integer"><cfelse>NULL</cfif>,
+                   collection_site       = <cfqueryparam value="#trim(arguments.collectionSite)#"  cfsqltype="cf_sql_varchar">,
+                   collection_date       = <cfif len(trim(arguments.collectionDate))><cfqueryparam value="#trim(arguments.collectionDate)#" cfsqltype="cf_sql_date"><cfelse>NULL</cfif>,
+                   notes                 = <cfqueryparam value="#trim(arguments.notes)#"           cfsqltype="cf_sql_longvarchar">
+                   <cfif len(trim(arguments.reviewStatus))>
+                   ,review_status        = <cfqueryparam value="#arguments.reviewStatus#"          cfsqltype="cf_sql_varchar">
+                   </cfif>
+             WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+        </cfquery>
     </cffunction>
 
     <!--- Create a new specimen record; returns the inserted ID --->
@@ -239,6 +338,36 @@
         </cfquery>
     </cffunction>
 
+    <!---
+        Delete a specimen and its analysis results.
+        The source image record (sl_images) is preserved.
+        Returns empty string on success, or an error message.
+    --->
+    <cffunction name="deleteSpecimen" access="public" returntype="string">
+        <cfargument name="id" type="numeric" required="true">
+
+        <cfif NOT arguments.id GT 0>
+            <cfreturn "Invalid specimen ID.">
+        </cfif>
+
+        <cftry>
+            <cfquery datasource="#application.dsn#">
+                DELETE FROM sl_analysis_results
+                 WHERE specimen_id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+
+            <cfquery datasource="#application.dsn#">
+                DELETE FROM sl_specimens
+                 WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+            </cfquery>
+
+            <cfreturn "">
+            <cfcatch type="any">
+                <cfreturn "Delete failed: " & cfcatch.message>
+            </cfcatch>
+        </cftry>
+    </cffunction>
+
     <!--- Get specimen counts grouped by genus (for sidebar filter) --->
     <cffunction name="getGenusBreakdown" access="public" returntype="query">
         <cfquery name="local.qry" datasource="#application.dsn#">
@@ -258,24 +387,24 @@
 
         <cfquery name="local.q" datasource="#application.dsn#">
             SELECT
-                COUNT(*)                                       AS total,
-                SUM(CASE WHEN review_status = 'needs_review'   THEN 1 ELSE 0 END) AS needs_review,
-                SUM(CASE WHEN review_status = 'auto_approved'  THEN 1 ELSE 0 END) AS auto_approved,
-                SUM(CASE WHEN review_status = 'approved'       THEN 1 ELSE 0 END) AS approved,
-                SUM(CASE WHEN confidence < #application.lowConfidenceThreshold#   THEN 1 ELSE 0 END) AS low_confidence
+                COUNT(*)                                                                    AS total,
+                COALESCE(SUM(CASE WHEN review_status = 'needs_review'  THEN 1 ELSE 0 END), 0) AS needs_review,
+                COALESCE(SUM(CASE WHEN review_status = 'auto_approved' THEN 1 ELSE 0 END), 0) AS auto_approved,
+                COALESCE(SUM(CASE WHEN review_status = 'approved'      THEN 1 ELSE 0 END), 0) AS approved,
+                COALESCE(SUM(CASE WHEN confidence < <cfqueryparam value="#application.lowConfidenceThreshold#" cfsqltype="cf_sql_decimal"> THEN 1 ELSE 0 END), 0) AS low_confidence
               FROM sl_specimens
         </cfquery>
 
-        <cfset local.stats.total          = local.q.total>
-        <cfset local.stats.needsReview    = local.q.needs_review>
-        <cfset local.stats.autoApproved   = local.q.auto_approved>
-        <cfset local.stats.approved       = local.q.approved>
-        <cfset local.stats.lowConfidence  = local.q.low_confidence>
+        <cfset local.stats.total          = val(local.q.total)>
+        <cfset local.stats.needsReview    = val(local.q.needs_review)>
+        <cfset local.stats.autoApproved   = val(local.q.auto_approved)>
+        <cfset local.stats.approved       = val(local.q.approved)>
+        <cfset local.stats.lowConfidence  = val(local.q.low_confidence)>
 
         <cfquery name="local.bq" datasource="#application.dsn#">
             SELECT COUNT(*) AS batch_count FROM sl_upload_batches
         </cfquery>
-        <cfset local.stats.batchCount = local.bq.batch_count>
+        <cfset local.stats.batchCount = val(local.bq.batch_count)>
 
         <cfreturn local.stats>
     </cffunction>

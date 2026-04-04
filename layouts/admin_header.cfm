@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><cfoutput>#encodeForHTML(isDefined("pageTitle") ? pageTitle & " — SkeeterLog Admin" : "SkeeterLog Admin")#</cfoutput></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/skeeterlog.css">
     <script src="https://unpkg.com/htmx.org@1.9.12" crossorigin="anonymous"></script>
 </head>
@@ -11,7 +13,7 @@
 
 <nav class="sl-navbar">
     <a href="/admin/index.cfm" class="sl-navbar-brand">
-        <span class="brand-icon">🦟</span>
+        <span class="brand-icon"></span>
         SkeeterLog
         <span class="brand-version">Admin</span>
     </a>
@@ -43,6 +45,9 @@
             <a href="/admin/analyze.cfm"   class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "analyze" ? " active" : "")#</cfoutput>">
                 <span class="icon">🔬</span> Analyze
             </a>
+            <a href="/admin/specimens/index.cfm" class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "specimens/index" ? " active" : "")#</cfoutput>">
+                <span class="icon">🧬</span> All Specimens
+            </a>
             <a href="/admin/review.cfm"    class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "review" ? " active" : "")#</cfoutput>">
                 <span class="icon">⚠️</span> Review Queue
                 <cfset local.flaggedCount = 0>
@@ -56,6 +61,21 @@
                 <cfif local.flaggedCount GT 0>
                     <span class="sl-badge sl-badge-amber"><cfoutput>#local.flaggedCount#</cfoutput></span>
                 </cfif>
+            </a>
+        </div>
+        <span class="sl-sidebar-label">Field Data</span>
+        <div class="sl-sidebar-section">
+            <a href="/admin/sites/index.cfm"   class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "admin/sites" ? " active" : "")#</cfoutput>">
+                <span class="icon">📍</span> Collection Sites
+            </a>
+            <a href="/admin/events/index.cfm"  class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "admin/events" ? " active" : "")#</cfoutput>">
+                <span class="icon">🗓️</span> Collection Events
+            </a>
+        </div>
+        <span class="sl-sidebar-label">Reference Library</span>
+        <div class="sl-sidebar-section">
+            <a href="/admin/references/index.cfm" class="sl-sidebar-link<cfoutput>#(cgi.script_name CONTAINS "references" ? " active" : "")#</cfoutput>">
+                <span class="icon">🖼</span> Reference Images
             </a>
         </div>
         <span class="sl-sidebar-label">Admin</span>

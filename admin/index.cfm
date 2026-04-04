@@ -1,3 +1,4 @@
+<cfinclude template="/layouts/admin_auth.cfm">
 <cfset pageTitle    = "Dashboard">
 <cfset specimenSvc = createObject("component", "components.SpecimenService")>
 <cfset uploadSvc   = createObject("component", "components.UploadService")>

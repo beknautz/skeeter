@@ -1,3 +1,4 @@
+<cfinclude template="/layouts/admin_auth.cfm">
 <cfset pageTitle  = "Upload Images">
 <cfset uploadSvc = createObject("component", "components.UploadService")>
 

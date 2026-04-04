@@ -26,6 +26,27 @@
 
 <cfinclude template="/layouts/header.cfm">
 
+<!--- Hero --->
+<div class="hero-wrap">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <section class="sl-hero">
+        <div class="hero-eyebrow">AI-Powered Mosquito Research Platform</div>
+        <h1>Identify &amp; catalog<br><em>Culicidae</em> specimens</h1>
+        <p>
+            Upload microscope images and receive instant AI-powered genus and species
+            identification with morphological analysis, confidence scoring, and
+            automatic specimen cataloging.
+        </p>
+        <div class="hero-actions">
+            <cfif isDefined("session.loggedIn") AND session.loggedIn>
+                <a href="/admin/upload.cfm" class="sl-btn sl-btn-primary">Upload Images</a>
+            </cfif>
+            <a href="#specimen-grid" class="sl-btn sl-btn-ghost">Browse Database</a>
+        </div>
+    </section>
+</div>
+
 <div class="sl-container">
 
     <div class="sl-page-header">
@@ -104,8 +125,8 @@
                     <cfoutput query="specimens">
                     <cfset local.confPct = round(specimens.confidence * 100)>
                     <cfset local.confClass = (specimens.confidence GTE 0.70) ? "high" : ((specimens.confidence GTE 0.40) ? "medium" : "low")>
-                    <div class="sl-card sl-specimen-card">
-                        <div class="sl-specimen-img-wrap">
+                    <div class="sl-card sl-specimen-card" style="cursor:pointer;" onclick="location.href='/specimen.cfm?id=#specimens.id#'">
+                        <a href="/specimen.cfm?id=#specimens.id#" class="sl-specimen-img-wrap" style="display:block;text-decoration:none;">
                             <cfif len(specimens.image_file)>
                                 <img src="/uploads/#encodeForHTMLAttribute(specimens.image_file)#"
                                      alt="#encodeForHTMLAttribute(specimens.specimen_id)# microscope image"
@@ -115,7 +136,7 @@
                                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;">🦟</div>
                             </cfif>
                             <span class="sl-specimen-id">#encodeForHTML(specimens.specimen_id)#</span>
-                        </div>
+                        </a>
                         <div class="sl-specimen-meta">
                             <div class="sl-specimen-name">
                                 <em>#encodeForHTML(specimens.genus_name)#
