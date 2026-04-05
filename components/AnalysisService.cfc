@@ -211,7 +211,7 @@
         <!--- Unknown specimen --->
         <cfset arrayAppend(local.contentBlocks, {
             "type": "text",
-            "text": "## UNKNOWN SPECIMEN TO IDENTIFY:"
+            "text": "UNKNOWN SPECIMEN TO IDENTIFY:"
         })>
         <cfset arrayAppend(local.contentBlocks, {
             "type": "image",
@@ -228,15 +228,32 @@
             "text": local.prompt
         })>
 
-        <!--- Build JSON request body --->
-        <cfset local.requestBody = serializeJSON({
-            "model":      application.anthropicModel,
-            "max_tokens": 768,
-            "messages": [{
-                "role":    "user",
-                "content": local.contentBlocks
-            }]
-        })>
+        <!---
+            Build the JSON request body manually.
+            ColdFusion's serializeJSON uppercases struct keys (MODEL, MAX_TOKENS, etc.)
+            which causes a 400 from the Claude API. We construct the JSON string
+            directly, using serializeJSON only for scalar string values where it
+            safely adds quotes and escaping.
+        --->
+        <cfset local.contentParts = []>
+        <cfloop array="#local.contentBlocks#" index="local.blk">
+            <cfif local.blk["type"] EQ "text">
+                <cfset arrayAppend(local.contentParts,
+                    '{"type":"text","text":' & serializeJSON(local.blk["text"]) & '}')>
+            <cfelseif local.blk["type"] EQ "image">
+                <cfset arrayAppend(local.contentParts,
+                    '{"type":"image","source":{"type":"base64","media_type":' &
+                    serializeJSON(local.blk["source"]["media_type"]) & ',"data":' &
+                    serializeJSON(local.blk["source"]["data"]) & '}}')>
+            </cfif>
+        </cfloop>
+
+        <cfset local.requestBody =
+            '{"model":' & serializeJSON(application.anthropicModel) &
+            ',"max_tokens":768' &
+            ',"messages":[{"role":"user","content":[' &
+            arrayToList(local.contentParts, ",") &
+            ']}]}'>
 
         <cftry>
             <cfhttp url="#application.anthropicApiUrl#"
